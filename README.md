@@ -84,29 +84,30 @@ De website gebruikt deze velden:
 
 ### Zo roept de website de API aan
 
-De API-aanroep staat in `javascript/script.js` en `javascript/main-charactors.js`:
+De API-aanroep staat in `javascript/shared.js`. Beide pagina's gebruiken dit bestand:
 
 ```js
-async function fetchCharactersFromApi() {
-  let url = "https://dragonball-api.com/api/characters?limit=100";
-  const api = await fetch(url);       // 1. stuur het verzoek
-  const take = await api.json();      // 2. zet het antwoord om naar JavaScript
-  let items = take.items || (Array.isArray(take) ? take : [take]); // 3. pak de lijst
-  if (items && items.length > 0) {
-    localStorage.setItem("db_characters_cache", JSON.stringify(items)); // 4. bewaar in de cache
+async function fetchCharacters() {
+  const response = await fetch(API_URL);           // 1. stuur het verzoek
+
+  if (!response.ok) {                              // 2. is het gelukt?
+    throw new Error("API error. Status: " + response.status);
   }
-  return items;
+
+  const data = await response.json();              // 3. zet het antwoord om naar JavaScript
+  localStorage.setItem(CACHE_KEY, JSON.stringify(data.items)); // 4. bewaar in de cache
+  return data.items;
 }
 ```
 
 Wat gebeurt hier?
 
-1. `fetch(url)` stuurt een `GET`-verzoek naar de API.
-2. `api.json()` zet het JSON-antwoord om naar een JavaScript-object.
-3. We pakken de lijst met personages uit `items`.
+1. `fetch(API_URL)` stuurt een `GET`-verzoek naar de API.
+2. `response.ok` controleert of de API "gelukt" terugstuurt. Zo niet (bijvoorbeeld status `404` of `500`), dan stopt de code met een fout.
+3. `response.json()` zet het JSON-antwoord om naar een JavaScript-object. De personages staan in `data.items`.
 4. We bewaren de lijst in `localStorage`, zodat de website de volgende keer meteen iets kan laten zien.
 
-Daarna maakt JavaScript voor elk personage een kaart en zet die op de pagina (`renderCharacters()` en `displayMainCharacters()`).
+Daarna maakt JavaScript voor elk personage een kaart en zet die op de pagina (`renderCharacters()` in `script.js` en `showMainCharacters()` in `main-charactors.js`).
 
 ### `async` en `await`
 
@@ -114,25 +115,24 @@ Een API-aanroep kost tijd: de browser moet wachten op een andere server. Daarom 
 
 ### Foutafhandeling
 
-De aanroep staat in een `try { ... } catch { ... }`. Gaat er iets mis, bijvoorbeeld geen internet of de API is offline? Dan:
+De aanroep staat in een `try { ... } catch { ... }`. Gaat er iets mis, bijvoorbeeld geen internet of de API geeft een foutcode? Dan:
 
 - zie je op de homepage de melding *"Er is een fout opgetreden bij het laden van de Ki-krijgers."*;
 - zie je op de pagina Main characters een rode foutmelding in plaats van de kaarten.
 
-Komt er wel een antwoord, maar zonder personages? Dan zie je *"No legendaries could be found."*
+Vindt een filter of zoekopdracht niets? Dan zie je *"Geen legendarische krijgers gevonden met dit filter!"*
 
 ### Cache en snelheid
 
 Om de website snel te maken:
 
-1. **Eerst de cache**: staat er al data in `localStorage`? Dan toont de website die meteen.
-2. **Op de achtergrond bijwerken**: daarna wordt de API toch opnieuw aangeroepen (`fetchCharactersInBackground()`), zodat de cache actueel blijft.
-3. **Eerst 12 personages**: de homepage toont eerst 12 personages. De rest komt zodra je scrolt of de muis beweegt (of na 3,5 seconden), in kleine stukjes.
-4. **Lazy loading**: afbeeldingen onderaan de pagina laden pas als je ernaartoe scrolt.
+1. **Eerst de cache**: staat er al data in `localStorage`? Dan toont de website die meteen (`getCharacters()`).
+2. **Op de achtergrond bijwerken**: daarna wordt de API toch opnieuw aangeroepen, zodat de cache actueel blijft.
+3. **Lazy loading**: alleen de eerste 4 afbeeldingen laden direct. De rest laadt pas als je ernaartoe scrolt.
 
 ### Ki-waarden omrekenen
 
-De API geeft Ki soms als tekst, zoals `"90 Septillion"` of `"60.000.000"`. Om de Ki-balk te kunnen tekenen, rekent `parseKiValue()` dit om naar een getal (bijvoorbeeld *septillion* = 10²⁴). `formatKiNumber()` zorgt dat het getal netjes op het scherm staat.
+De API geeft Ki soms als tekst, zoals `"90 Septillion"` of `"60.000.000"`. Om de Ki-balk te kunnen tekenen, rekent `kiToNumber()` dit om naar een getal (bijvoorbeeld *septillion* = 10²⁴). `kiPercent()` berekent daarna hoe vol de balk is.
 
 ## Installatie en starten
 
@@ -150,12 +150,12 @@ git clone https://github.com/Sachhh-star/anime.git
 
 **Stap 2.** Open de map `anime` in Visual Studio Code.
 
-**Stap 3.** Klik rechtsonder op **Go Live** (Live Server). De server start op poort `5502`.
+**Stap 3.** Klik rechtsonder op **Go Live** (Live Server).
 
-**Stap 4.** Open in je browser:
+**Stap 4.** De homepage opent in je browser, bijvoorbeeld op:
 
 ```
-http://127.0.0.1:5502/html/index.html
+http://127.0.0.1:5500/
 ```
 
 > Let op: open de HTML-bestanden niet door erop te dubbelklikken. De CSS en JavaScript staan met een pad vanaf de hoofdmap (`/css/...`, `/javascript/...`), en dat werkt alleen via een server zoals Live Server.
@@ -172,12 +172,13 @@ http://127.0.0.1:5502/html/index.html
 
 | Map / bestand | Wat staat erin? |
 | --- | --- |
-| `html/index.html` | De homepage met zoeken, filters en alle personages. |
-| `html/main-charactors.html` | De pagina met de vijf hoofdpersonages. |
+| `index.html` | De homepage met zoeken, filters en alle personages. |
+| `main-charactors.html` | De pagina met de vijf hoofdpersonages. |
 | `css/index.css` | De opmaak van de website. |
 | `css/main-charactors.css` | Extra opmaak voor de pagina Main characters. |
-| `javascript/script.js` | API-aanroep, zoeken, filters en het detailvenster van de homepage. |
-| `javascript/main-charactors.js` | API-aanroep en kaarten voor de pagina Main characters. |
+| `javascript/shared.js` | Code voor beide pagina's: de API-aanroep, de cache, de Ki-berekening en het detailvenster. |
+| `javascript/script.js` | Homepage: kaarten, zoeken, filterknoppen en de A–Z-knoppen. |
+| `javascript/main-charactors.js` | Pagina Main characters: de vijf grote kaarten met Ki-balk. |
 | `img/` | Afbeeldingen. |
 | `anime_document/` | Documenten voor de opdracht (klantwens, API endpoints, testrapporten, SEO-advies). |
 

@@ -3,31 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Dragon Ball Universe - Character Power Portal</title>
-    <meta
-      name="description"
-      content="Explore and filter characters from the Dragon Ball universe, including Gohan, Goku, and others. Check their Ki levels, races, series, and bios."
-    />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://dragonball-api.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    />
-
+    
+    <title>Dragon Ball Universe - Main Characters Portal</title>
+    <meta name="description" content="Meet the legendary top 5 main characters of Dragon Ball: Goku, Vegeta, Gohan, Piccolo, and Trunks. View their profiles, Ki levels, and bios." />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dragonball-api.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/main-charactors.css" />
     <link rel="stylesheet" href="/css/index.css" />
   </head>
   <body>
     <nav class="navbar bg-body-tertiary sticky-top nav-menu">
       <div class="container-fluid">
-        <a class="navbar-brand nav-logo" href="#" id="nav-brand-logo">Dragon Ball</a>
+        <a class="navbar-brand nav-logo" href="index.html" id="nav-brand-logo">Dragon Ball</a>
         <button
           class="navbar-toggler nav-toggle"
           type="button"
@@ -60,16 +52,16 @@
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 nav-list">
           <li class="nav-item">
             <a
-              class="nav-link active"
-              aria-current="page"
-              href="#"
+              class="nav-link"
+              href="index.html"
               id="nav-link-home"
               >Home</a
             >
           </li>
           <li class="nav-item">
             <a
-              class="nav-link"
+              class="nav-link active"
+              aria-current="page"
               href="main-charactors.html"
               id="nav-link-chars"
               >Main characters</a
@@ -79,80 +71,51 @@
       </div>
     </div>
 
-    <!-- homepage -->
-    <div id="HomePage" class="container fade-in">
-      <div class="home">
-        <h1 class="title" id="main-hero-title">Dragon Ball</h1>
-        <p class="title-info">
-          Dragon Ball is een legendarische Japanse anime die draait om Goku en
-          zijn vrienden. Samen gaan ze op avontuur om de magische Dragon Balls
-          te verzamelen en de aarde te beschermen tegen steeds sterkere
-          kosmische vijanden.
-        </p>
-
-        <div class="search-container">
-          <input
-            id="zoekBar"
-            type="text"
-            placeholder="Zoeken ..."
-            aria-label="Zoekpersonage"
-          />
-        </div>
-
-        <div id="filter" class="filter-buttons">
-          <button id="btn-all" class="filter-btn active ripple">All</button>
-          <button id="btn-male" class="filter-btn ripple">Male</button>
-          <button id="btn-female" class="filter-btn ripple">Female</button>
-          <button id="btn-saiyan" class="filter-btn ripple">Saiyan</button>
-          <button id="btn-human" class="filter-btn ripple">Human</button>
-        </div>
-
-        <div class="alphabet-container">
-          <div id="alphabet-filter" class="alphabet-buttons"></div>
-        </div>
+    <main class="container fade-in">
+      <h1 class="page-title">Legendary Fighters</h1>
+      
+      <div id="loading" class="loading-state">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Gathering Ki Energy...</p>
       </div>
-    </div>
 
-    <main class="container fade-in" id="MainCharacters">
-      <div id="resutaalt" class="main-characters">
-        <div id="card"></div>
+      <div id="error" class="error-state hide">
+        <p class="error-text">💥 Er is een fout opgetreden bij het laden van de krijgers. Probeer het later opnieuw.</p>
+      </div>
+
+      <div id="characters-grid" class="characters-grid hide">
       </div>
     </main>
 
     <div id="characterModal" class="modal hide-modal fade-in">
       <div class="modal-overlay" id="modal-overlay"></div>
       <div class="modal-content modal-shadow">
-        <button class="close-btn" id="close-modal" aria-label="Close modal">
-          &times;
-        </button>
-
+        <button class="close-btn" id="close-modal" aria-label="Close modal">&times;</button>
+        
         <div class="modal-body">
           <div class="modal-left">
             <img id="modal-img" src="" alt="Character Image" />
           </div>
-
+          
           <div class="modal-right">
             <h2 id="modal-name">Name</h2>
-
+            
             <div class="modal-info">
               <p><strong>Race:</strong> <span id="modal-race"></span></p>
               <p><strong>Gender:</strong> <span id="modal-gender"></span></p>
               <p><strong>Series:</strong> <span id="modal-series"></span></p>
-
+              
               <div class="ki-container">
                 <div class="ki-header">
                   <span class="ki-label">Ki Power Level</span>
-                  <span class="ki-values"
-                    ><span id="modal-ki">0</span> /
-                    <span id="modal-maxKi">0</span></span
-                  >
+                  <span class="ki-values"><span id="modal-ki">0</span> / <span id="modal-maxKi">0</span></span>
                 </div>
                 <div class="ki-progress-bg">
                   <div id="modal-ki-fill" class="ki-progress-fill"></div>
                 </div>
               </div>
             </div>
-
+            
             <div class="modal-desc-container">
               <p><strong>Biography / Description:</strong></p>
               <p id="modal-description" class="description-text"></p>
@@ -161,11 +124,13 @@
         </div>
       </div>
     </div>
+
     <footer>
       <p>&copy; 2026 Dragon Ball Universe Portal.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/javascript/script.js"></script>
+    <script src="/javascript/shared.js"></script>
+    <script src="/javascript/main-charactors.js"></script>
   </body>
 </html>

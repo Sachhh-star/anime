@@ -347,6 +347,21 @@ body {
   transform: scale(1.05);
 }
 
+/* the wider "All" button in the A-Z row */
+.alpha-btn.alpha-all {
+  width: auto;
+  padding: 0 14px;
+  border-radius: 18px;
+}
+
+/* message when a filter finds no characters */
+.no-results {
+  grid-column: 1 / -1;
+  padding: 40px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
 /* card filtering animation */
 .charac {
   opacity: 0;
@@ -382,6 +397,7 @@ main h1 {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 30px;
   padding: 10px;
+  align-items: start; /* cards keep their own height, also when there is only one row */
   min-height: 800px; /* Reserves space to prevent CLS layout shifts on card loading */
 }
 
