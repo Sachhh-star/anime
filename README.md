@@ -1,6 +1,6 @@
 # Dragon Ball Universe – Character Power Portal
 
-Een website over de personages uit **Dragon Ball**. Alle personages komen live uit een externe API: de [Dragon Ball API](https://dragonball-api.com). Je kunt zoeken, filteren en per personage de details en het **Ki Power Level** bekijken.
+Een website over de personages uit **Dragon Ball**. Alle personages komen live uit een externe API: de [Dragon Ball API](https://web.dragonball-api.com/). Je kunt zoeken, filteren en per personage de details en het **Ki Power Level** bekijken.
 
 Dit project is gemaakt voor het **keuzedeel Frontend Development** (MBO 4 Software Development, ROC Alfa-college). Het belangrijkste leerdoel: **data ophalen uit een API en die tonen op de website**. Hoe dat werkt, lees je in het hoofdstuk [De API](#de-api).
 
@@ -184,4 +184,7 @@ http://127.0.0.1:5500/
 
 ## Bron
 
-Alle data en afbeeldingen van de personages komen van de [Dragon Ball API](https://dragonball-api.com). Dragon Ball is van Akira Toriyama / Toei Animation. Dit is een schoolproject.
+- **Dragon Ball API**: [https://web.dragonball-api.com/](https://web.dragonball-api.com/). Hier staat de documentatie van de API. Alle data en afbeeldingen van de personages komen hiervandaan.
+- **API-adres dat de website gebruikt**: `https://dragonball-api.com/api/characters?limit=100`
+
+Dragon Ball is van Akira Toriyama / Toei Animation. Dit is een schoolproject.
